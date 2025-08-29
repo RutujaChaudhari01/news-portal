@@ -45,18 +45,21 @@ Project Structure
 news_portal/
 │
 ├── app.py                # Main Flask application
-
+|
 ├── requirements.txt      # Python dependencies
-
+|
 ├── README.md             # Project documentation
-
-│
+|
 ├── templates/            # HTML templates
+|   |
 │   ├── index.html        # Homepage
+|   |
 │   ├── login.html        # Login page
+|   |
 │   ├── analytics.html    # Analytics dashboard
 │
 └── instance/             # Database and config (auto-created)
+    |
     └── users.db
 
 
@@ -101,6 +104,7 @@ Save favorite articles for later
 👩‍💻 Author
 
 Rutuja Chaudhari
+
 
 
 
