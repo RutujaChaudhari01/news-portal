@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Login - News Portal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: #fff;
+      padding: 36px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      width: 360px;
+      text-align: center;
+      animation: fadeIn 0.6s ease;
+    }
+    h2 {
+      margin-top: 0;
+      color: #0b84ff;
+    }
+    .input-group {
+      position: relative;
+      margin: 12px 0;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background: #fafafa;
+      font-size: 14px;
+    }
+    input:focus {
+      border-color: #0b84ff;
+      outline: none;
+      box-shadow: 0 0 6px rgba(11, 132, 255, 0.3);
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background: #0b84ff;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 8px;
+    }
+    button:hover { background: #005fcc; }
+    .toggle-pass {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 14px;
+      color: #666;
+    }
+    .error {
+      color: #d9534f;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    p {
+      font-size: 12px;
+      color: #666;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>🔑 Login</h2>
+    <form method="post" action="{{ url_for('login') }}">
+      <div class="input-group">
+        <input type="text" name="username" placeholder="Username" required />
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" name="password" placeholder="Password" required />
+        <span class="toggle-pass" onclick="togglePassword()">👁</span>
+      </div>
+      <button type="submit">Login</button>
+    </form>
+
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <p>Demo credentials: <b>admin / admin</b></p>
+  </div>
+
+  <script>
+    function togglePassword() {
+      const passField = document.getElementById("password");
+      passField.type = passField.type === "password" ? "text" : "password";
+    }
+  </script>
+</body>
+</html>

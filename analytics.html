@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Analytics - News Portal</title>
+  <style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #d0e1f9, #f9f7d9);
+    margin: 0;
+  }
+
+  header {
+    background: blue;
+    color: white;
+    padding: 16px 20px;
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  nav h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  nav .right a {
+    color: white;
+    margin-left: 14px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+  }
+
+  nav .right a:hover {
+    color: #ffe66d;
+  }
+
+  .container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 20px auto;
+    text-align: center;
+  }
+
+  h2 {
+    margin-top: 24px;
+    color: #ff6b6b;
+    font-size: 22px;
+  }
+
+  img {
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    margin-bottom: 24px;
+  }
+</style>
+
+</head>
+<body>
+  <header>
+    <nav>
+      <h1>Analytics Dashboard</h1>
+      <div class="right">
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Sentiment Distribution</h2>
+    <img src="data:image/png;base64,{{ charts['sentiment'] }}" />
+
+    <h2>Articles by Category</h2>
+    <img src="data:image/png;base64,{{ charts['category'] }}" />
+
+    <h2>Top Sources</h2>
+    <img src="data:image/png;base64,{{ charts['source'] }}" />
+  </div>
+</body>
+</html>

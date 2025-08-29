@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>News Portal</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f0f2f5; margin:0; }
+    header { background:#0b84ff; color:white; padding:16px 20px; }
+    nav { display:flex; justify-content:space-between; align-items:center; }
+    nav h1 { margin:0; font-size:22px; }
+    nav .right { font-size:14px; }
+    nav .right a { color:white; margin-left:10px; text-decoration:none; font-weight:600; }
+    .container { width:92%; max-width:1200px; margin:18px auto; }
+    .filters { text-align:center; margin-bottom:14px; }
+    select, input, button { padding:8px 10px; margin:6px; border-radius:6px; border:1px solid #ccc; }
+    input { width:150px; }
+    .error { background:#ffe6e6; color:#a33; padding:10px; border-radius:6px; margin:10px 0; text-align:center; }
+
+    .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:16px; }
+    .card { background:white; border-radius:10px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,0.06); display:flex; flex-direction:column; transition:transform 0.2s; }
+    .card:hover { transform:translateY(-4px); }
+    .thumb { width:100%; height:160px; object-fit:cover; background:#eee; }
+    .content { padding:12px; flex:1; display:flex; flex-direction:column; }
+    h3 { margin:0 0 8px; font-size:16px; }
+    p { margin:0 0 8px; color:#444; font-size:14px; min-height:38px; }
+    .meta { font-size:12px; color:#666; margin-bottom:6px; }
+    .read { color:#0b84ff; text-decoration:none; font-weight:600; }
+
+    .sentiment-row { display:flex; justify-content:space-around; align-items:flex-end; gap:10px; height:70px; margin-top:6px; }
+    .bar-col { text-align:center; width:46px; }
+    .bar { width:100%; height:60px; background:#eee; border-radius:6px; position:relative; overflow:hidden; }
+    .bar-inner { position:absolute; bottom:0; left:0; right:0; border-radius:6px 6px 0 0; transition: height .45s ease; }
+    .pos { background:#28a745; }
+    .neg { background:#dc3545; }
+    .neu { background:#6c757d; }
+    .label { margin-top:6px; font-size:12px; color:#333; }
+    .pct { font-size:11px; color:#333; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <h1>News Portal</h1>
+      <div class="right">
+        Welcome, {{ user }} |
+        <a href="{{ url_for('analytics') }}">Analytics</a> |
+        <a href="{{ url_for('logout') }}">Logout</a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="filters">
+      <form method="get" action="{{ url_for('home') }}">
+        Region:
+        <select name="country">
+          {% for code, name in countries.items() %}
+            <option value="{{ code }}" {% if code==country %}selected{% endif %}>{{ name }}</option>
+          {% endfor %}
+        </select>
+
+        Category:
+        <select name="category">
+          {% for key, value in category_map.items() %}
+            <option value="{{ key }}" {% if category==key %}selected{% endif %}>{{ value }}</option>
+          {% endfor %}
+        </select>
+
+        Keyword:
+        <input type="text" name="keyword" placeholder="Enter keyword" value="{{ request.args.get('keyword','') }}">
+
+        <button type="submit">Get News</button>
+      </form>
+    </div>
+
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <div class="grid">
+      {% for article in news %}
+      <div class="card">
+        {% if article.urlToImage %}
+          <img class="thumb" src="{{ article.urlToImage }}" alt="image">
+        {% else %}
+          <div class="thumb"></div>
+        {% endif %}
+        <div class="content">
+          <h3><a class="read" href="{{ article.url }}" target="_blank">{{ article.title }}</a></h3>
+          <p>{{ article.description }}</p>
+          <div class="meta">Source: {{ article.source }} | {{ article.publishedAt }}</div>
+
+          <div class="sentiment-row">
+            <div class="bar-col">
+              <div class="bar"><div class="bar-inner pos" style="height:{{ article.sentiments.positive }}%"></div></div>
+              <div class="label">Pos</div>
+              <div class="pct">{{ article.sentiments.positive }}%</div>
+            </div>
+            <div class="bar-col">
+              <div class="bar"><div class="bar-inner neu" style="height:{{ article.sentiments.neutral }}%"></div></div>
+              <div class="label">Neu</div>
+              <div class="pct">{{ article.sentiments.neutral }}%</div>
+            </div>
+            <div class="bar-col">
+              <div class="bar"><div class="bar-inner neg" style="height:{{ article.sentiments.negative }}%"></div></div>
+              <div class="label">Neg</div>
+              <div class="pct">{{ article.sentiments.negative }}%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.bar-inner').forEach(el => {
+        const h = el.style.height;
+        el.style.height = '0';
+        requestAnimationFrame(() => requestAnimationFrame(() => { el.style.height = h; }));
+      });
+    });
+  </script>
+</body>
+</html>
